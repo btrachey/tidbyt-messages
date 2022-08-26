@@ -43,6 +43,8 @@ jobs:
         aws_region: ${{ secrets.AWS_REGION}}
         function_name: pixlet-messages
         image_uri: ${{ steps.login-ecr.outputs.registry }}/pixlet:latest
+        role: arn:aws:iam::914884994734:role/service-role/pixlet-messages-role-edow8tqk
         timeout: 10
         environment: TIDBYT_API_TOKEN=${{ secrets.TIDBYT_API_TOKEN }},TIDBYT_DEVICE_ID=${{ secrets.TIDBYT_DEVICE_ID }}
-        dry_run: false
+        dry_run: true
+        debug: true
