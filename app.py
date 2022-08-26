@@ -42,9 +42,7 @@ def handler(event, context):
     replace_dict = {**default_replace_dict, **given_replace_dict}
 
     # replace variables in template
-    output_file = re.sub(r"<(\w+?)>",
-                         lambda match: replace_dict[match.group(1)],
-                         ''.join(template_file))
+    output_file = ''.join(template_file).format(**replace_dict)
 
     # write the rendered template
     with open("/tmp/rendered.star", "w+") as outfile:

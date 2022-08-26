@@ -2,7 +2,7 @@ load("render.star", "render")
 
 def main():
   return render.Root(
-    delay = <SCROLL_SPEED>,
+    delay = {SCROLL_SPEED},
     child = render.Box(
       render.Marquee(
         height=32,
@@ -13,10 +13,10 @@ def main():
           cross_align="center",
           children = [
             render.WrappedText(
-              content="<MESSAGE_TEXT>",
+              content="{MESSAGE_TEXT}",
               align="center",
-              color = "#<HEX_COLOR>",
-              font = "<FONT>"
+              color = "#{HEX_COLOR}",
+              font = "{FONT}"
             )
           ]
         )
