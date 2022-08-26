@@ -38,10 +38,10 @@ jobs:
     - name: Deploy Lambda Function
       uses: appleboy/lambda-action@v0.1.5
       with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ secrets.AWS_REGION}}
+        aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws_region: ${{ secrets.AWS_REGION}}
         function_name: pixlet-messages
         image_uri: ${{ steps.login-ecr.outputs.registry }}/pixlet:latest
         environment: TIDBYT_API_TOKEN=${{ secrets.TIDBYT_API_TOKEN }},TIDBYT_DEVICE_ID=${{ secrets.TIDBYT_DEVICE_ID }}
-        dry-run: true
+        dry_run: true
