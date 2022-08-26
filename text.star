@@ -2,7 +2,7 @@ load("render.star", "render")
 
 def main():
   return render.Root(
-    delay = 100,
+    delay = <SCROLL_SPEED>,
     child = render.Box(
       render.Marquee(
         height=32,
@@ -16,7 +16,7 @@ def main():
               content="<MESSAGE_TEXT>",
               align="center",
               color = "#<HEX_COLOR>",
-              font = "6x13"
+              font = "<FONT>"
             )
           ]
         )
