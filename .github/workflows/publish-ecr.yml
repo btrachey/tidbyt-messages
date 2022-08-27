@@ -9,7 +9,7 @@ jobs:
   build:
 
     name: Build Image, Push to ECR, and update Lambda
-    runs-on: ubuntu-latest
+    runs-on: arm64v8/ubuntu
 
     steps:
     - name: Check Out Code
