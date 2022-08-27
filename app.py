@@ -43,6 +43,9 @@ def handler(event, context):
                 for k, v in urllib.parse.parse_qs(decoded.decode(
                     'utf-8')).items()
             }
+            if "HEX_COLOR" in form_data_parsed:
+                form_data_parsed["HEX_COLOR"] = form_data_parsed[
+                    "HEX_COLOR"].replace("#", "")
             given_replace_dict = form_data_parsed
 
     else:
