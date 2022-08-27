@@ -3,6 +3,7 @@ import json
 import os
 import subprocess
 import urllib.parse
+from json.decoder import JSONDecodeError
 from pprint import pprint
 
 
@@ -34,12 +35,15 @@ def handler(event, context):
     given_replace_dict = {}
     if event.get("isBase64Encoded", False):
         decoded = base64.b64decode(event.get("body", ""))
-        form_data_parsed = {
-            k: v[0]
-            for k, v in urllib.parse.parse_qs(decoded).items()
-        }
-        given_replace_dict = json.loads(decoded).get("replacements",
-                                                     form_data_parsed)
+        try:
+            given_replace_dict = json.loads(decoded).get("replacements", {})
+        except JSONDecodeError:
+            form_data_parsed = {
+                k: v[0]
+                for k, v in urllib.parse.parse_qs(decoded).items()
+            }
+            given_replace_dict = form_data_parsed
+
     else:
         given_replace_dict = event.get("replacements", {})
 
