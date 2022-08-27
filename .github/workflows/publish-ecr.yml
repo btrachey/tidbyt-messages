@@ -9,7 +9,7 @@ jobs:
   build:
 
     name: Build Image, Push to ECR, and update Lambda
-    runs-on: arm64v8/ubuntu
+    runs-on: ubuntu-latest
 
     steps:
     - name: Check Out Code
@@ -32,7 +32,7 @@ jobs:
         ECR_REPOSITORY: pixlet
         IMAGE_TAG: latest
       run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        docker buildx build --tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG --platform linux/arm/v8 .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
     - name: Update Lambda With Newest Image
