@@ -1,4 +1,4 @@
-FROM ubuntu
+FROM arm64v8/ubuntu
 
 ENV PIXLET_VERSION 0.18.1
 ENV PIXLET_FILENAME pixlet_${PIXLET_VERSION}_linux_arm64.tar.gz
