@@ -1,7 +1,7 @@
-FROM arm64v8/ubuntu
+FROM ubuntu
 
 ENV PIXLET_VERSION 0.18.1
-ENV PIXLET_FILENAME pixlet_${PIXLET_VERSION}_linux_arm64.tar.gz
+ENV PIXLET_FILENAME pixlet_${PIXLET_VERSION}_linux_amd64.tar.gz
 ENV PIXLET_URL https://github.com/tidbyt/pixlet/releases/download/v${PIXLET_VERSION}/${PIXLET_FILENAME}
 
 RUN apt-get update && \
