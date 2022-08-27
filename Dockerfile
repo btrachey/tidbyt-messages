@@ -14,7 +14,8 @@ RUN apt-get update && \
       gzip
 
 RUN curl -L "$PIXLET_URL" -o /usr/local/bin/$PIXLET_FILENAME && \
-    tar -xf /usr/local/bin/$PIXLET_FILENAME -C /usr/local/bin
+    tar -xf /usr/local/bin/$PIXLET_FILENAME -C /usr/local/bin && \
+    rm /usr/local/bin/$PIXLET_FILENAME
 
 RUN python3 -m pip install awslambdaric
 
