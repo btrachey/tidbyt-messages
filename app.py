@@ -40,7 +40,8 @@ def handler(event, context):
         except JSONDecodeError:
             form_data_parsed = {
                 k: v[0]
-                for k, v in urllib.parse.parse_qs(decoded).items()
+                for k, v in urllib.parse.parse_qs(decoded.decode(
+                    'utf-8')).items()
             }
             given_replace_dict = form_data_parsed
 
