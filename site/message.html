@@ -1,0 +1,50 @@
+<title>Message Brian</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
+</head>
+
+<body>
+
+  <h2>Send Brian a message on his Tidbyt.</h2>
+  <form method="post" action="https://api.brianwtracey.com/message">
+
+    <p>
+      <label>Message Text
+        <textarea name="MESSAGE_TEXT" maxlength=100>Type your message here.</textarea>
+      </label>
+    </p>
+
+    <p>
+      <label>Font Color
+        <input type="color" id="HEX_COLOR" name="HEX_COLOR" value="#ad97ef">
+      </label>
+    </p>
+
+    <p>
+      <label>Scroll Delay (ms)
+        <input type="number" id="SCROLL_SPEED" name="SCROLL_SPEED" min="0" max="500" step="50" value="0">
+      </label>
+    </p>
+
+    <p>
+      <label>Font
+        <select name="FONT" id="FONT" maxlength=100>
+          <option value="6x13" selected="selected">6x13</option>
+          <option value="tb-8">tb-8</option>
+          <option value="Dina_r400-6">Dina_r400-6</option>
+          <option value="5x8">5x8</option>
+          <option value="10x20">10x20</option>
+          <option value="tom-thumb">tom-thumb</option>
+          <option value="CG-pixel-3x5-mono">CG-pixel-3x5-mono</option>
+          <option value="CG-pixel-4x5-mono">CG-pixel-4x5-mono</option>
+        </select>
+      </label>
+      <a href="https://github.com/tidbyt/pixlet/blob/main/docs/fonts.md">Font Examples</a>
+    </p>
+
+    <p><button>Send Message</button< /p>
+
+  </form>
+
+</body>
