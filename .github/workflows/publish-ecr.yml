@@ -35,16 +35,14 @@ jobs:
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
-    - name: Deploy Lambda Function
-      uses: appleboy/lambda-action@v0.1.5
+    - name: Update Lambda With Newest Image
       with:
-        aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws_region: ${{ secrets.AWS_REGION}}
-        function_name: pixlet-messages
-        image_uri: ${{ steps.login-ecr.outputs.registry }}/pixlet:latest
-        role: arn:aws:iam::914884994734:role/service-role/pixlet-messages-role-edow8tqk
-        timeout: 10
-        environment: TIDBYT_API_TOKEN=${{ secrets.TIDBYT_API_TOKEN }},TIDBYT_DEVICE_ID=${{ secrets.TIDBYT_DEVICE_ID }}
-        dry_run: true
-        debug: true
+        env:
+          LAMBDA_NAME: pixlet-messages
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: pixlet
+          IMAGE_TAG: latest
+        run: |
+          aws lambda update-function-code \
+          --function-name $LAMBDA_NAME \
+          --image-uri $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
