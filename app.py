@@ -32,7 +32,7 @@ def handler(event, context):
     # handle case where data gets delivered directly
     # or is base64 encoded from API-Gateway endpoint
     given_replace_dict = {}
-    if "isBase64Encoded" in event:
+    if event.get("isBase64Encoded", False):
         decoded = base64.b64decode(event.get("body", ""))
         given_replace_dict = json.loads(decoded).get("replacements", {})
     else:
