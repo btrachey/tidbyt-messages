@@ -1,8 +1,8 @@
 import base64
 import json
 import os
-import re
 import subprocess
+import urllib.parse
 from pprint import pprint
 
 
@@ -34,7 +34,12 @@ def handler(event, context):
     given_replace_dict = {}
     if event.get("isBase64Encoded", False):
         decoded = base64.b64decode(event.get("body", ""))
-        given_replace_dict = json.loads(decoded).get("replacements", {})
+        form_data_parsed = {
+            k: v[0]
+            for k, v in urllib.parse.parse_qs(decoded).items()
+        }
+        given_replace_dict = json.loads(decoded).get("replacements",
+                                                     form_data_parsed)
     else:
         given_replace_dict = event.get("replacements", {})
 
