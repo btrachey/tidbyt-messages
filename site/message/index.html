@@ -57,7 +57,11 @@
     const sendStop = async () => {
           const response = await fetch("https://api.brianwtracey.com/stop");
       const myJson = response.json();
-      console.log(myJson)
+      const responseDiv = document.getElementById("response_messages");
+      const newContent = document.createTextNode(myJson);
+      responseDiv.appendChild(newContent);
+
+      console.log("json response: " + myJson)
     }
   </script>
 </body>
