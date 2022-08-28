@@ -1,0 +1,30 @@
+name: Publish HTML
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - '/site/*'
+
+jobs:
+
+  build:
+
+    name: Copy HTML Files To S3
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check Out Code
+      uses: actions/checkout@v3
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION}}
+
+    - name: Update Lambda With Newest Image
+      working-directory: site
+      run: |
+        aws s3 cp . s3://brianwtracey.com/ --recursive

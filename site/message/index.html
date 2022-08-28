@@ -46,5 +46,17 @@
     <p><button>Send Message</button< /p>
 
   </form>
+  <div id="stop_button">
+    <button onclick="sendStop()" type="button">Tell Brian to stop talking!</button>
+  </div>
+  <div id="response_messages">
+  </div>
 
+  <script>
+    const sendStop = async () => {
+          const response = await fetch("https://api.brianwtracey.com/stop");
+      const myJson = response.json();
+      console.log(myJson)
+    }
+  </script>
 </body>
