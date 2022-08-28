@@ -2,9 +2,10 @@ name: Lambda CD
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
     paths:
-      - 'lambda/**'
+      - lambda/**
 
 jobs:
 
