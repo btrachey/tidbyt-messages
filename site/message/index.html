@@ -1,59 +1,230 @@
-<title>Message Brian</title>
+<html>
 
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<link rel="icon" href="http://brianwtracey.com.s3-website-us-east-1.amazonaws.com/favicon.png" type="image/icon">
+<head>
+  <title>Message Brian</title>
+
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <link rel="icon" href="http://brianwtracey.com.s3-website-us-east-1.amazonaws.com/favicon.png" type="image/icon">
+
+  <style>
+    body {
+      font-size: 12px;
+      color: #000000;
+    }
+
+    .content {
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    .input-wrapper {
+      padding: 10px 0;
+      box-sizing: border-box;
+      position: relative;
+      min-height: 60px;
+      width: 50%;
+    }
+
+    .range-control {}
+
+    /* set thumb width */
+    input[type="range"],
+    input[type="range"]+datalist {
+      --thumb-width: 14px;
+      --thumb-height: 14px;
+    }
+
+    /* style range */
+    input[type="range"] {
+      width: 100%;
+      max-width: 100%;
+      height: var(--thumb-height);
+      position: relative;
+      z-index: 200;
+      background-color: #000000;
+      -webkit-appearance: none;
+      // appearance: none;
+      background-color: transparent;
+      display: block;
+      position: absolute;
+      top: 10px;
+      width: 100%;
+      left: 0;
+      right: 0;
+    }
+
+    /* style Firefox range and thumb */
+    .range-control[type="range"]::-moz-range-track {
+      background: #eee;
+      cursor: pointer;
+      height: 1px;
+      border-top: 1px solid #000000;
+    }
+
+    .range-control[type="range"]::-moz-range-thumb {
+      background: #eee;
+      box-sizing: border-box;
+      width: var(--thumb-width);
+      height: var(--thumb-height);
+      background-color: #ffffff;
+      cursor: pointer;
+      border: 1px solid #000000;
+    }
+
+    /* style Chrome range and thumb */
+    .range-control[type="range"]::-webkit-slider-runnable-track {
+      -webkit-appearance: none;
+      height: 1px;
+      background: #000000;
+      position: absolute;
+      top: 5px;
+      width: 100%;
+      left: 0;
+      right: 0;
+      cursor: pointer;
+    }
+
+    .range-control[type="range"]::-webkit-slider-thumb {
+      background-color: #ffffff;
+      border: 1px solid #000000;
+      box-sizing: border-box;
+      height: var(--thumb-height);
+      width: var(--thumb-width);
+      -webkit-appearance: none;
+      margin-top: calc(var(--thumb-height) / 2 * -1);
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    .range-list {
+      // margin-top: -12px;
+      box-sizing: border-box;
+      width: 100%;
+      z-index: 0;
+      display: flex;
+      justify-content: space-between;
+      position: absolute;
+      top: 16px;
+      left: 0;
+      right: 0;
+    }
+
+    .range-list option {
+      --option-width: calc((100% - 12px) / (var(--list-length) - 1));
+
+      display: inline-block;
+      padding-top: calc(var(--thumb-height) / 2);
+      width: var(--option-width);
+      text-align: center;
+      position: relative;
+
+      &::before {
+        content: "";
+        position: absolute;
+        border-left: 1px;
+        width: 1px;
+        height: 5px;
+        border-left: 1px solid #000000;
+        top: 0;
+        left: 50%;
+        margin-left: -var(--option-width);
+      }
+    }
+
+    .range-list option:first-child {
+      width: calc((100% - var(--thumb-width)) / ((var(--list-length) - 1) * 2) + var(--thumb-width) / 2);
+      text-align: left;
+
+      &::before {
+        left: 0;
+        margin-left: unset;
+      }
+    }
+
+    .range-list option:last-child {
+      width: calc((100% - 12px) / ((var(--list-length) - 1) * 2) + 6px);
+      text-align: right;
+
+      &::before {
+        left: unset;
+        margin-left: unset;
+        right: 0;
+      }
+    }
+  </style>
 
 </head>
 
 <body>
 
+  <div class="content">
   <h2>Send Brian a message on his Tidbyt.</h2>
-  <form method="post" action="https://api.brianwtracey.com/message">
+    <form method="post" action="https://api.brianwtracey.com/message">
 
-    <p>
-      <label>Message Text
-        <textarea name="MESSAGE_TEXT" maxlength=100>Type your message here.</textarea>
-      </label>
-    </p>
+      <p>
+        <label>Message Text
+          <textarea name="MESSAGE_TEXT" maxlength=100>Type your message here.</textarea>
+        </label>
+      </p>
 
-    <p>
-      <label>Font Color
-        <input type="color" id="HEX_COLOR" name="HEX_COLOR" value="#ad97ef">
-      </label>
-    </p>
+      <p>
+        <label>Font Color
+          <input type="color" id="HEX_COLOR" name="HEX_COLOR" value="#ad97ef">
+        </label>
+      </p>
 
-    <p>
-      <label>Scroll Delay (ms)
-        <input type="number" id="SCROLL_SPEED" name="SCROLL_SPEED" min="0" max="500" step="50" value="0">
-      </label>
-    </p>
+      <!-- <p> -->
+      <!--   <label>Scroll Delay (ms) -->
+      <!--     <input type="number" id="SCROLL_SPEED" name="SCROLL_SPEED" min="0" max="500" step="50" value="0"> -->
+      <!--   </label> -->
+      <!-- </p> -->
 
-    <p>
-      <label>Font
-        <select name="FONT" id="FONT" maxlength=100>
-          <option value="6x13" selected="selected">6x13</option>
-          <option value="tb-8">tb-8</option>
-          <option value="Dina_r400-6">Dina_r400-6</option>
-          <option value="5x8">5x8</option>
-          <option value="10x20">10x20</option>
-          <option value="tom-thumb">tom-thumb</option>
-          <option value="CG-pixel-3x5-mono">CG-pixel-3x5-mono</option>
-          <option value="CG-pixel-4x5-mono">CG-pixel-4x5-mono</option>
-        </select>
-      </label>
-      <a href="https://github.com/tidbyt/pixlet/blob/main/docs/fonts.md">Font Examples</a>
-    </p>
+      <label>Scroll Speed</label>
+      <div class="input-wrapper">
+        <input id="SCROLL_SPEED" name="SCROLL_SPEED" type="range" min="0" value="250" max="500" step="1" list="ticks"
+          class="range-control"/>
+        <datalist id="ticks" class="range-list" style="--list-length: 5;">
+          <option value="0">fast</option>
+          <option value="125"></option>
+          <option value="250"></option>
+          <option value="375"></option>
+          <option value="500">slow</option>
+        </datalist>
+      </div>
 
-    <p><button>Send Message</button< /p>
+      <p>
+        <label>Font
+          <select name="FONT" id="FONT" maxlength=100>
+            <option value="6x13" selected="selected">6x13</option>
+            <option value="tb-8">tb-8</option>
+            <option value="Dina_r400-6">Dina_r400-6</option>
+            <option value="5x8">5x8</option>
+            <option value="10x20">10x20</option>
+            <option value="tom-thumb">tom-thumb</option>
+            <option value="CG-pixel-3x5-mono">CG-pixel-3x5-mono</option>
+            <option value="CG-pixel-4x5-mono">CG-pixel-4x5-mono</option>
+          </select>
+        </label>
+        <a href="https://github.com/tidbyt/pixlet/blob/main/docs/fonts.md">Font Examples</a>
+      </p>
 
-  </form>
+      <p>
+        <button>Send Message</button>
+      </p>
+
+    </form>
+  </div>
   <div id="stop_button">
-    <button onclick="sendStop()" type="button">Tell Brian to stop talking!</button>
+    <h2>Other Tidbyt actions!</h2>
+    <p>
+      <button onclick="sendStop()" type="button">Tell Brian to stop talking!</button>
+    </p>
   </div>
   <div id="response_messages">
   </div>
 
   <script>
+    //sends the stop api request and displays the returned text
     const sendStop = async () => {
       const response = await fetch("https://api.brianwtracey.com/stop");
       const myJson = await response.json();
@@ -64,5 +235,22 @@
       console.log("json response:");
       console.log(myJson);
     }
+
+    // make the slider snap to the ticks
+    const speeds = [0, 125, 250, 375, 500];
+    function getClosest(arr, val) {
+      return arr.reduce(function (prev, curr) {
+        return (Math.abs(curr - val) < Math.abs(prev - val) ? curr : prev);
+      });
+    }
+    document.querySelector("#SCROLL_SPEED").addEventListener("change", function () {
+      let closest = getClosest(speeds, this.value);
+      //this.value = document.querySelector("#rangevalue").value = closest;
+      this.value = closest;
+    });
+
+
   </script>
 </body>
+
+</html>
