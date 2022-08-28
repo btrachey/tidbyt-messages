@@ -23,7 +23,7 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ secrets.AWS_REGION}}
 
-    - name: Update Lambda With Newest Image
+    - name: Update Files in S3
       working-directory: site
       run: |
         aws s3 cp . s3://brianwtracey.com/ --recursive
