@@ -55,13 +55,14 @@
 
   <script>
     const sendStop = async () => {
-          const response = await fetch("https://api.brianwtracey.com/stop");
+      const response = await fetch("https://api.brianwtracey.com/stop");
       const myJson = response.json();
       const responseDiv = document.getElementById("response_messages");
       const newContent = document.createTextNode(myJson);
       responseDiv.appendChild(newContent);
 
-      console.log("json response: " + myJson)
+      console.log("json response:");
+      console.log(myJson);
     }
   </script>
 </body>
