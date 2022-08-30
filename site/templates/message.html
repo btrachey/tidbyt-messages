@@ -8,11 +8,13 @@
   <div class="container mb-5">
     <div class="row justify-content-center">
       <div class="col-4">
-        <form method="post" action="https://api.brianwtracey.com/message">
+        <form method="post" action="javascript:clickSubmit();" onsubmit="submitForm(event, this)" id="message-form"
+          target="">
 
           <div class="mb-3">
             <label for="MESSAGE_TEXT" class="form-label">Message Text</label>
-            <textarea name="MESSAGE_TEXT" maxlength=100 class="form-control" placeholder="Type your message here."></textarea>
+            <textarea name="MESSAGE_TEXT" maxlength=100 class="form-control"
+              placeholder="Type your message here."></textarea>
           </div>
 
           <div class="mb-3">
@@ -50,11 +52,15 @@
               <option value="CG-pixel-3x5-mono">CG-pixel-3x5-mono</option>
               <option value="CG-pixel-4x5-mono">CG-pixel-4x5-mono</option>
             </select>
-            <div class="form-text"><a href="https://github.com/tidbyt/pixlet/blob/main/docs/fonts.md" target="_blank" rel="noopener noreferrer">Font Examples</a>
+            <div class="form-text"><a href="https://github.com/tidbyt/pixlet/blob/main/docs/fonts.md">Font Examples</a>
             </div>
           </div>
 
-          <button type="submit" class="btn btn-primary">Send Message</button>
+          <button id="submit-button" type="submit" class="btn btn-primary">
+            <span id="submit-button-span" style="display: none" class="spinner-border spinner-border-sm" role="status"
+              aria-hidden="true"></span>
+            Send Message
+          </button>
 
         </form>
       </div>
@@ -71,8 +77,8 @@
       </div>
     </div>
 
-    <div class="row justify-content-center" id="response_messages"></div>
-  </div>
+    <div class="row" id="response_messages"></div>
+  </div>;
 
   <script>
     //sends the stop api request and displays the returned text
@@ -87,18 +93,39 @@
       console.log(myJson);
     }
 
-    // make the slider snap to the ticks
-    const speeds = [0, 125, 250, 375, 500];
-    function getClosest(arr, val) {
-      return arr.reduce(function (prev, curr) {
-        return (Math.abs(curr - val) < Math.abs(prev - val) ? curr : prev);
+    // custom form submit logic
+    const submitForm = async (e, form) => {
+      const resp = await fetch("https://api.brianwtracey.com/message", {
+        method: 'post',
+        body: new URLSearchParams(new FormData(form))
       });
-    }
-    document.querySelector("#SCROLL_SPEED").addEventListener("change", function () {
-      let closest = getClosest(speeds, this.value);
-      this.value = closest;
-    });
+      const respJson = await resp.json();
+      const btn = document.getElementById("submit-button")
+      const btnSpan = document.getElementById("submit-button-span")
 
+      btn.removeAttribute("disabled");
+      btnSpan.setAttribute("style", "display: none");
+      const inner = btn.getInnerHTML();
+      const newInner = inner.replace("Sending...", "Send Message");
+      btn.innerHTML = newInner;
+      const responseDiv = document.getElementById("response_messages");
+      const newContent = document.createTextNode(myJson?.status);
+      responseDiv.appendChild(newContent);
 
+      console.log('We send post asynchronously (AJAX)');
+      e.preventDefault();
+      document.getElementById("message-form").reset();
+    };
+
+    const clickSubmit = async () => {
+      const btn = document.getElementById("submit-button")
+      const btnSpan = document.getElementById("submit-button-span")
+      btn.setAttribute("disabled", "");
+      btnSpan.removeAttribute("style");
+      const inner = btn.getInnerHTML();
+      const newInner = inner.replace("Send Message", "Sending...");
+      btn.innerHTML = newInner;
+      document.getElementById("message-form").submit();
+    };
   </script>
  {% endblock body_content %}
