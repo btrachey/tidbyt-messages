@@ -119,7 +119,7 @@
         const inner = btn.getInnerHTML();
         const newInner = inner.replace("Send Message", "Sending...");
         btn.innerHTML = newInner;
-      } else {
+      } else if (btnContent.includes("sending...")) {
         btn.removeAttribute("disabled");
         btnSpan.setAttribute("style", "display: none");
         const inner = btn.getInnerHTML();
