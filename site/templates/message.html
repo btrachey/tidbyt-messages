@@ -107,7 +107,7 @@
     }
 
     // toggle button
-    function toggleButton() {
+    async function toggleButton() {
       const btn = document.getElementById("submit-button");
       const btnSpan = document.getElementById("submit-button-span");
 
@@ -143,13 +143,13 @@
       responseDiv.appendChild(newContent);
 
       document.getElementById("message-form").reset();
-      toggleButton();
+      await toggleButton();
       e.preventDefault();
     };
 
     const clickSubmit = async () => {
+      await toggleButton();
       document.getElementById("message-form").submit();
-      toggleButton();
     };
   </script>
  {% endblock body_content %}
