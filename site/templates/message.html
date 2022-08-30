@@ -109,12 +109,12 @@
       const newInner = inner.replace("Sending...", "Send Message");
       btn.innerHTML = newInner;
       const responseDiv = document.getElementById("response_messages");
-      const newContent = document.createTextNode(myJson?.status);
+      const newContent = document.createTextNode(JSON.parse(respJson)?.status);
       responseDiv.appendChild(newContent);
 
       console.log('We send post asynchronously (AJAX)');
-      e.preventDefault();
       document.getElementById("message-form").reset();
+      e.preventDefault();
     };
 
     const clickSubmit = async () => {
