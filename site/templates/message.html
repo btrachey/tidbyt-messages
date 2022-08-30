@@ -136,7 +136,6 @@
         body: new URLSearchParams(new FormData(form))
       });
       const respJson = await resp.json();
-      toggleButton();
       const responseDiv = document.getElementById("message-response-div");
       const responseMessage = respJson?.status == "success" ? "Message sent!" : "Failed to send message.";
       const newContent = document.createTextNode(responseMessage);
@@ -144,6 +143,7 @@
       responseDiv.appendChild(newContent);
 
       document.getElementById("message-form").reset();
+      toggleButton();
       e.preventDefault();
     };
 
