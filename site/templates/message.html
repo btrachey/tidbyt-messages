@@ -131,6 +131,7 @@
 
     // custom form submit logic
     const submitForm = async (e, form) => {
+      await toggleButton();
       const resp = await fetch("https://api.brianwtracey.com/message", {
         method: 'post',
         body: new URLSearchParams(new FormData(form))
