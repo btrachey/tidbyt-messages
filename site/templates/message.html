@@ -100,7 +100,6 @@
         body: new URLSearchParams(new FormData(form))
       });
       const respJson = await resp.json();
-          console.log(respJson);
       const btn = document.getElementById("submit-button")
       const btnSpan = document.getElementById("submit-button-span")
 
@@ -110,7 +109,7 @@
       const newInner = inner.replace("Sending...", "Send Message");
       btn.innerHTML = newInner;
       const responseDiv = document.getElementById("response_messages");
-      const newContent = document.createTextNode(JSON.parse(respJson)?.status);
+      const newContent = document.createTextNode(respJson?.status);
       responseDiv.appendChild(newContent);
 
       console.log('We send post asynchronously (AJAX)');
