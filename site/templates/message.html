@@ -56,11 +56,17 @@
             </div>
           </div>
 
+          <div class="row justify-content-center">
+            <div class="col-auto">
           <button id="submit-button" type="submit" class="btn btn-primary">
             <span id="submit-button-span" style="display: none" class="spinner-border spinner-border-sm" role="status"
               aria-hidden="true"></span>
             Send Message
           </button>
+          </div>
+          <div class="col-auto" id="message-response-div">
+          </div>
+          </div>
 
         </form>
       </div>
@@ -108,11 +114,11 @@
       const inner = btn.getInnerHTML();
       const newInner = inner.replace("Sending...", "Send Message");
       btn.innerHTML = newInner;
-      const responseDiv = document.getElementById("response_messages");
-      const newContent = document.createTextNode(respJson?.status);
+      const responseDiv = document.getElementById("message-response-div");
+      const responseMessage = respJson?.status == "success" ? "Message sent!" : "Failed to send message."
+      const newContent = document.createTextNode(responseMessage);
       responseDiv.appendChild(newContent);
 
-      console.log('We send post asynchronously (AJAX)');
       document.getElementById("message-form").reset();
       e.preventDefault();
     };
