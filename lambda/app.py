@@ -18,6 +18,17 @@ def handler(event, context):
     if "test" in event:
         return "hello world"
 
+    if "image" in event:
+        fixed_images_dict = {"nyan_cat": "nyan_cat.webp"}
+        image_to_push = fixed_images_dict.get(event.get("image", "nyan_cat"),
+                                              "nyan_cat.webp")
+        tidbyt_device_id = os.environ.get("TIDBYT_DEVICE_ID")
+        tidbyt_api_token = os.environ.get("TIDBYT_API_TOKEN")
+        push_subprocess = subprocess.run([
+            "pixlet", "push", tidbyt_device_id, image_to_push, "-t",
+            tidbyt_api_token
+        ])
+
     # load in the template
     with open("text.star", "r") as infile:
         template_file = infile.readlines()
