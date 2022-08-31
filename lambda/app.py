@@ -29,6 +29,12 @@ def handler(event, context):
             tidbyt_api_token
         ])
 
+        response = {"status": "failed"}
+        if push_subprocess.returncode == 0:
+            response["status"] = "success"
+
+        return response
+
     # load in the template
     with open("text.star", "r") as infile:
         template_file = infile.readlines()
