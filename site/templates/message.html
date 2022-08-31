@@ -132,7 +132,7 @@
     }
 
     const form = document.getElementById("message-form");
-    form.addEventListener("submit", (event) => {
+    form.addEventListener("submit", async (event) => {
       event.preventDefault();
       await toggleButton();
       const resp = await fetch("https://api.brianwtracey.com/message", {
