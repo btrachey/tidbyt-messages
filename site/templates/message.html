@@ -104,7 +104,7 @@
       const newContent = document.createTextNode(myJson);
       responseDiv.appendChild(newContent);
 
-      setTimeout(() => {removeAllChildNodes(responseDiv)}, 3000);
+      setTimeout(() => {removeAllChildNodes(responseDiv)}, 5000);
 
       console.log("json response:");
       console.log(myJson);
@@ -150,6 +150,8 @@
 
       form.reset();
       await toggleButton();
+
+      setTimeout(() => {removeAllChildNodes(responseDiv)}, 5000);
     });
 
     // custom form submit logic
