@@ -104,6 +104,8 @@
       const newContent = document.createTextNode(myJson);
       responseDiv.appendChild(newContent);
 
+      setTimeout(removeAllChildNodes(responseDiv), 3000);
+
       console.log("json response:");
       console.log(myJson);
     }
