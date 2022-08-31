@@ -8,7 +8,8 @@
   <div class="container mb-5">
     <div class="row justify-content-center">
       <div class="col-4">
-        <form method="post" action="javascript:clickSubmit();" onsubmit="submitForm(event, this)" id="message-form">
+        <!-- <form method="post" action="javascript:clickSubmit();" onsubmit="submitForm(event, this)" id="message-form"> -->
+        <form method="post" id="message-form">
 
           <div class="mb-3">
             <label for="MESSAGE_TEXT" class="form-label">Message Text</label>
@@ -99,6 +100,7 @@
       const response = await fetch("https://api.brianwtracey.com/stop");
       const myJson = await response.json();
       const responseDiv = document.getElementById("response_messages");
+      removeAllChildNodes(responseDiv);
       const newContent = document.createTextNode(myJson);
       responseDiv.appendChild(newContent);
 
@@ -129,8 +131,9 @@
 
     }
 
-    // custom form submit logic
-    const submitForm = async (e, form) => {
+    const form = document.getElementById("message-form");
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
       await toggleButton();
       const resp = await fetch("https://api.brianwtracey.com/message", {
         method: 'post',
@@ -143,14 +146,32 @@
       removeAllChildNodes(responseDiv);
       responseDiv.appendChild(newContent);
 
-      document.getElementById("message-form").reset();
+      form.reset();
       await toggleButton();
-      e.preventDefault();
-    };
+    });
 
-    const clickSubmit = async () => {
-      //await toggleButton();
-      document.getElementById("message-form").submit();
-    };
+    // custom form submit logic
+    // const submitForm = async (e, form) => {
+    //   await toggleButton();
+    //   const resp = await fetch("https://api.brianwtracey.com/message", {
+    //     method: 'post',
+    //     body: new URLSearchParams(new FormData(form))
+    //   });
+    //   const respJson = await resp.json();
+    //   const responseDiv = document.getElementById("message-response-div");
+    //   const responseMessage = respJson?.status == "success" ? "Message sent!" : "Failed to send message.";
+    //   const newContent = document.createTextNode(responseMessage);
+    //   removeAllChildNodes(responseDiv);
+    //   responseDiv.appendChild(newContent);
+
+    //   document.getElementById("message-form").reset();
+    //   await toggleButton();
+    //   e.preventDefault();
+    // };
+
+    // const clickSubmit = async () => {
+    //   //await toggleButton();
+    //   document.getElementById("message-form").submit();
+    // };
   </script>
  {% endblock body_content %}
