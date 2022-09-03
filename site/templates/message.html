@@ -105,28 +105,21 @@
 
   // toggle button
   async function toggleButton(buttonId, spinnerSpanId, enabledText, disabledText) {
-    //const btn = document.getElementById("submit-button");
-    //const btnSpan = document.getElementById("submit-button-span");
     const btn = document.getElementById(buttonId);
     const btnSpan = document.getElementById(spinnerSpanId);
 
-    //const btnContent = btn.textContent.toLowerCase();
     const btnContent = btn.textContent;
 
-    //if (btnContent.includes("send message")) {
     if (btnContent.includes(enabledText)) {
       btn.setAttribute("disabled", "");
       btnSpan.removeAttribute("style");
       const inner = btn.innerHTML;
-      //const newInner = inner.replace("Send Message", "Sending...");
       const newInner = inner.replace(enabledText, disabledText);
       btn.innerHTML = newInner;
-    //} else if (btnContent.includes("sending...")) {
     } else if (btnContent.includes(disabledText)) {
       btn.removeAttribute("disabled");
       btnSpan.setAttribute("style", "display: none");
       const inner = btn.innerHTML;
-      //const newInner = inner.replace("Sending...", "Send Message");
       const newInner = inner.replace(disabledText, enabledText);
       btn.innerHTML = newInner;
     }
@@ -152,12 +145,14 @@
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
-    //await toggleButton();
     await toggleButton("submit-button", "submit-button-span", "Send Message", "Sending...");
 
     const resp = await fetch("https://api.brianwtracey.com/message", {
       method: 'post',
-      body: new URLSearchParams(new FormData(form))
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(Object.fromEntries(new FormData(form).entries()))
     });
     const respJson = await resp.json();
     const responseDiv = document.getElementById("message-response-div");
@@ -167,7 +162,6 @@
     responseDiv.appendChild(newContent);
     form.reset();
 
-    //await toggleButton();
     await toggleButton("submit-button", "submit-button-span", "Send Message", "Sending...");
 
     // clear response message after 5 seconds
