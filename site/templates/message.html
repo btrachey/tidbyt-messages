@@ -147,12 +147,14 @@
 
     await toggleButton("submit-button", "submit-button-span", "Send Message", "Sending...");
 
+    const formData = new FormData(event.target);
+    const formJSON = Object.fromEntries(formData.entries());
     const resp = await fetch("https://api.brianwtracey.com/message", {
       method: 'post',
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(Object.fromEntries(new FormData(form).entries()))
+      body: JSON.stringify(formJSON)
     });
     const respJson = await resp.json();
     const responseDiv = document.getElementById("message-response-div");
