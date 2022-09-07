@@ -1,6 +1,10 @@
-{% extends "base.html" %}
-{% block title %}Send Brian a Message{% endblock title %}
-{% block body_content %}
+{% extends "base.html" %} {% block title %}Send Brian a Message{% endblock title %} {% block body_content %}
+
+<style>
+  .btn:not([disabled]) .spinner-grow {
+    display: none;
+  }
+</style>
 
 <div class="container text-center mb-4">
   <h2>Send Brian a message on his Tidbyt.</h2>
@@ -9,7 +13,6 @@
 <div class="container mb-5">
   <div class="row justify-content-center">
     <div class="col-4">
-
       <form method="post" id="message-form">
 
         <div class="mb-3">
@@ -43,7 +46,7 @@
 
         <div class="mb-3">
           <label for="FONT" class="form-label">Font</label>
-          <select name="FONT" id="FONT" maxlength=100 class="form-select">
+          <select name="FONT" id="FONT" maxlength="100" class="form-select">
             <option value="6x13" selected="selected">6x13</option>
             <option value="tb-8">tb-8</option>
             <option value="Dina_r400-6">Dina_r400-6</option>
@@ -53,16 +56,16 @@
             <option value="CG-pixel-3x5-mono">CG-pixel-3x5-mono</option>
             <option value="CG-pixel-4x5-mono">CG-pixel-4x5-mono</option>
           </select>
-          <div class="form-text"><a href="https://github.com/tidbyt/pixlet/blob/main/docs/fonts.md">Font Examples</a>
+          <div class="form-text">
+            <a href="https://github.com/tidbyt/pixlet/blob/main/docs/fonts.md">Font Examples</a>
           </div>
         </div>
 
         <div class="row justify-content-center">
           <div class="col-auto">
             <button id="submit-button" type="submit" class="btn btn-primary">
-              <span id="submit-button-span" style="display: none" class="spinner-grow spinner-grow-sm" role="status"
-                aria-hidden="true"></span>
-              Send Message
+              <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+              <span class="text">Send Message</span>
             </button>
           </div>
         </div>
@@ -70,7 +73,6 @@
         <div class="row justify-content-center">
           <div class="col-auto" id="message-response-div"></div>
         </div>
-
       </form>
     </div>
   </div>
@@ -78,97 +80,110 @@
 
 <div class="container">
   <div class="row justify-content-center" id="stop_button">
-
     <div class="col-auto">
       <h2>Other Tidbyt actions:</h2>
     </div>
 
     <div class="col-auto">
       <button onclick="sendStop()" type="button" class="btn btn-danger" id="stop-button">
-        <span id="stop-button-span" style="display: none" class="spinner-grow spinner-grow-sm" role="status"
-          aria-hidden="true"></span>
-        Tell Brian to stop talking.
+        <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+        <span class="text">Tell Brian to stop talking.</span>
       </button>
     </div>
-
   </div>
 
-  <div class="row justify-content-center" id="response_messages"></div>
+  <div class="row justify-content-center" id="stop-response-div"></div>
 </div>
 
 <script>
-  function removeAllChildNodes(parent) {
-    while (parent.firstChild) {
-      parent.removeChild(parent.firstChild);
-    }
-  }
+  const IS_MOCKING = true;
+  const mockDelay = (seconds) => new Promise((resolve) => setTimeout(resolve, seconds * 1000));
 
-  // toggle button
-  async function toggleButton(buttonId, spinnerSpanId, enabledText, disabledText) {
-    const btn = document.getElementById(buttonId);
-    const btnSpan = document.getElementById(spinnerSpanId);
+  const API_URL_ROOT = "https://api.brianwtracey.com";
+  const apiFetch = async (path, options) => await fetch(`${API_URL_ROOT}/${path}`, options);
+  const api = {
+    stop: async () => {
+      if (IS_MOCKING) {
+        await mockDelay(2);
+        return "Thanks for telling Brian to stop talking.";
+      }
 
-    const btnContent = btn.textContent;
+      const response = await apiFetch("stop");
+      return await response.json();
+    },
+    message: async (body) => {
+      if (IS_MOCKING) {
+        await mockDelay(2);
+        return { status: "success" };
+      }
 
-    if (btnContent.includes(enabledText)) {
-      btn.setAttribute("disabled", "");
-      btnSpan.removeAttribute("style");
-      const inner = btn.innerHTML;
-      const newInner = inner.replace(enabledText, disabledText);
-      btn.innerHTML = newInner;
-    } else if (btnContent.includes(disabledText)) {
-      btn.removeAttribute("disabled");
-      btnSpan.setAttribute("style", "display: none");
-      const inner = btn.innerHTML;
-      const newInner = inner.replace(disabledText, enabledText);
-      btn.innerHTML = newInner;
-    }
-  }
+      const response = await apiFetch("message", {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
+      return await response.json();
+    },
+  };
 
-  //sends the stop api request and displays the returned text
-  const sendStop = async () => {
-    toggleButton("stop-button", "stop-button-span", "Tell Brian to stop talking.", "Sending...")
-    const response = await fetch("https://api.brianwtracey.com/stop");
-    const myJson = await response.json();
-    const responseDiv = document.getElementById("response_messages");
-    removeAllChildNodes(responseDiv);
-    const newContent = document.createTextNode(myJson);
-    responseDiv.appendChild(newContent);
+  const elements = {
+    message: { button: document.getElementById("submit-button") },
+    stop: { button: document.getElementById("stop-button") },
+  };
+  elements.message.form = document.getElementById("message-form");
+  elements.message.spinner = elements.message.button.getElementsByClassName("spinner-grow");
+  elements.message.text = elements.message.button.getElementsByClassName("text");
+  elements.message.response = document.getElementById("message-response-div");
+  elements.stop.spinner = elements.stop.button.getElementsByClassName("spinner-grow");
+  elements.stop.text = elements.stop.button.getElementsByClassName("text");
+  elements.stop.response = document.getElementById("stop-response-div");
 
-    toggleButton("stop-button", "stop-button-span", "Tell Brian to stop talking.", "Sending...")
+  const strings = {
+    message: "Send Message",
+    stop: "Tell Brian to stop talking.",
+    sending: "Sending...",
+  };
+
+  const toggleButton = (name) => {
+    elements[name].button.toggleAttribute("disabled");
+    const isSending = elements[name].text.innerHTML === strings.sending;
+    elements[name].text.innerHTML = isSending ? strings[name] : strings.sending;
+  };
+
+  const setResponseText = (name, text) => {
+    elements[name].response.innerHTML = text;
     // clear response message after 5 seconds
-    setTimeout(() => {removeAllChildNodes(responseDiv)}, 5000);
-  }
+    setTimeout(() => (elements[name].response.innerHTML = ""), 5000);
+  };
 
-  // add form submit listener with custom submission logic
-  const form = document.getElementById("message-form");
-  form.addEventListener("submit", async (event) => {
+  // sends the stop api request and displays the returned text
+  const sendStop = async () => {
+    toggleButton("stop");
+
+    const text = await api.stop();
+    setResponseText("stop", text);
+
+    toggleButton("stop");
+  };
+
+  const sendMessage = async (event) => {
     event.preventDefault();
 
-    await toggleButton("submit-button", "submit-button-span", "Send Message", "Sending...");
+    toggleButton("message");
 
     const formData = new FormData(event.target);
     const formJSON = Object.fromEntries(formData.entries());
-    const resp = await fetch("https://api.brianwtracey.com/message", {
-      method: 'post',
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formJSON)
-    });
-    const respJson = await resp.json();
-    const responseDiv = document.getElementById("message-response-div");
-    const responseMessage = respJson?.status == "success" ? "Message sent!" : "Failed to send message.";
-    const newContent = document.createTextNode(responseMessage);
-    removeAllChildNodes(responseDiv);
-    responseDiv.appendChild(newContent);
+    const response = await api.message(formJSON);
+    const text = response?.status === "success" ? "Message sent!" : "Failed to send message.";
+    setResponseText("message", text);
     form.reset();
 
-    await toggleButton("submit-button", "submit-button-span", "Send Message", "Sending...");
+    toggleButton("message");
+  };
 
-    // clear response message after 5 seconds
-    setTimeout(() => {removeAllChildNodes(responseDiv)}, 5000);
-  });
-
+  // add form submit listener with custom submission logic
+  elements.message.form.addEventListener("submit", sendMessage);
 </script>
 {% endblock body_content %}
