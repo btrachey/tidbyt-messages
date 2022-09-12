@@ -28,7 +28,7 @@ def main():
         {
             "template_name": "message.html",
             "output_file_name": "index.html",
-            "output_file_path": f"{render_path}/message"
+            "output_file_path": f"{render_path}/tidbyt"
         },
     ]
 
