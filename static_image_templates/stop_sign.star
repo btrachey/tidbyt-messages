@@ -7,11 +7,18 @@ iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAA
 
 def main():
   return render.Root(
-    child = render.Row(
+    delay = 300,
+    max_age = 5,
+    child = render.Animation(
       children = [
-        render.Image(src=STOP_SIGN)
-      ],
-      main_align = "center",
-      expanded = True,
+        render.Row(
+          children = [
+            render.Image(src=STOP_SIGN)
+          ],
+          main_align = "center",
+          expanded = True,
+        ),
+        render.Box(width = 64, height = 32, color = "#000000")
+      ]
     )
   )
