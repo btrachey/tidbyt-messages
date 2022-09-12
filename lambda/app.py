@@ -115,4 +115,4 @@ def handler(event, context):
     try:
         return handle_actions(json.loads(event.get("body", {})))
     except TypeError:
-        return handle_actions(event.get("body", {}))
+        return handle_actions(event.get("body", event))
