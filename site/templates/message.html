@@ -137,8 +137,9 @@
     });
     const myJson = await response.json();
     const responseDiv = document.getElementById("response_messages");
+    const responseMessage = myJson?.status == "success" ? "Thanks for telling Brian to stop talking." : "Failed to send the stop talking signal.";
+    const newContent = document.createTextNode(responseMessage);
     removeAllChildNodes(responseDiv);
-    const newContent = document.createTextNode(myJson);
     responseDiv.appendChild(newContent);
 
     toggleButton("stop-button", "stop-button-span", "Tell Brian to stop talking.", "Sending...")
