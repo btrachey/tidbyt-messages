@@ -7,38 +7,48 @@ from json.decoder import JSONDecodeError
 from pprint import pprint
 
 
-def handler(event, context):
-    # log the Lambda event and context
-    print("Event:")
-    pprint(event)
-    print("Context:")
-    pprint(context)
+def build_pixlet_sender(tidbyt_device_id, tidbyt_api_token):
 
-    # shortuct for testing so we don't go through the whole rendering process
-    if "test" in event:
-        return "hello world"
-
-    if "image" in event:
-        fixed_images_dict = {"nyan_cat": "nyan_cat.webp"}
-        image_to_push = fixed_images_dict.get(event.get("image", "nyan_cat"),
-                                              "nyan_cat.webp")
-        tidbyt_device_id = os.environ.get("TIDBYT_DEVICE_ID")
-        tidbyt_api_token = os.environ.get("TIDBYT_API_TOKEN")
+    def pixlet_send(image_filename):
         push_subprocess = subprocess.run([
-            "pixlet", "push", tidbyt_device_id, image_to_push, "-t",
+            "pixlet", "push", tidbyt_device_id, image_filename, "-t",
             tidbyt_api_token
         ])
-
         response = {"status": "failed"}
         if push_subprocess.returncode == 0:
             response["status"] = "success"
 
         return response
 
-    # load in the template
+    return pixlet_send
+
+
+def load_message_template():
     with open("text.star", "r") as infile:
         template_file = infile.readlines()
 
+    return template_file
+
+
+def send_specific_image(image_label):
+    fixed_images_dict = {"nyan_cat": "nyan_cat.webp"}
+    image_to_push = fixed_images_dict.get(image_label, "nyan_cat.webp")
+
+    tidbyt_device_id = os.environ.get("TIDBYT_DEVICE_ID")
+    tidbyt_api_token = os.environ.get("TIDBYT_API_TOKEN")
+    push_subprocess = subprocess.run([
+        "pixlet", "push", tidbyt_device_id, image_to_push, "-t",
+        tidbyt_api_token
+    ])
+
+    response = {"status": "failed"}
+    if push_subprocess.returncode == 0:
+        response["status"] = "success"
+
+    return response
+
+
+def send_message(message_content):
     # default values to prevent failed executions
     default_replace_dict = {
         "MESSAGE_TEXT": "template message",
@@ -47,32 +57,11 @@ def handler(event, context):
         "FONT": "6x13"
     }
 
-    # handle case where data gets delivered directly
-    # or is base64 encoded from API-Gateway endpoint
-    given_replace_dict = {}
-    if event.get("isBase64Encoded", False):
-        decoded = base64.b64decode(event.get("body", ""))
-        try:
-            given_replace_dict = json.loads(decoded).get("replacements", {})
-        except JSONDecodeError:
-            form_data_parsed = {
-                k: v[0]
-                for k, v in urllib.parse.parse_qs(decoded.decode(
-                    'utf-8')).items()
-            }
-            if "HEX_COLOR" in form_data_parsed:
-                form_data_parsed["HEX_COLOR"] = form_data_parsed[
-                    "HEX_COLOR"].replace("#", "")
-            given_replace_dict = form_data_parsed
-
-    else:
-        given_replace_dict = event.get("replacements", {})
-
     # resolve given values with defaults, preferring given values
-    replace_dict = {**default_replace_dict, **given_replace_dict}
+    replacements_dict = {**default_replace_dict, **message_content}
 
     # replace variables in template
-    output_file = ''.join(template_file).format(**replace_dict)
+    output_file = ''.join(load_message_template()).format(**replacements_dict)
 
     # write the rendered template
     with open("/tmp/rendered.star", "w+") as outfile:
@@ -95,3 +84,28 @@ def handler(event, context):
         response["status"] = "success"
 
     return response
+
+
+def handle_actions(body_content):
+    if "image" in body_content:
+        return send_specific_image(body_content.get("image"))
+    if "message" in body_content:
+        return send_message(body_content.get("message"))
+
+
+def handler(event, context):
+    # log the Lambda event and context
+    print("Event:")
+    pprint(event)
+    print("Context:")
+    pprint(context)
+
+    # shortuct for testing so we don't go through the whole rendering process
+    if "test" in event:
+        return "hello world"
+
+    if event.get("isBase64Encoded", False):
+        decoded = base64.b64decode(event.get("body", ""))
+        return handle_actions(decoded)
+    else:
+        return handle_actions(event.get("body", {}))

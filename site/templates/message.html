@@ -154,7 +154,7 @@
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(formJSON)
+        body: JSON.stringify({"message": formJSON})
     });
     const respJson = await resp.json();
     const responseDiv = document.getElementById("message-response-div");

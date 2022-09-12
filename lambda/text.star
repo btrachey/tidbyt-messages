@@ -15,7 +15,7 @@ def main():
             render.WrappedText(
               content="{MESSAGE_TEXT}",
               align="center",
-              color = "#{HEX_COLOR}",
+              color = "{HEX_COLOR}",
               font = "{FONT}"
             )
           ]
