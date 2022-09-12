@@ -128,7 +128,13 @@
   //sends the stop api request and displays the returned text
   const sendStop = async () => {
     toggleButton("stop-button", "stop-button-span", "Tell Brian to stop talking.", "Sending...")
-    const response = await fetch("https://api.brianwtracey.com/stop");
+    const response = await fetch("https://api.brianwtracey.com/message", {
+      method: 'post',
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({"image": "stop_sign"})
+    });
     const myJson = await response.json();
     const responseDiv = document.getElementById("response_messages");
     removeAllChildNodes(responseDiv);
@@ -152,9 +158,9 @@
     const resp = await fetch("https://api.brianwtracey.com/message", {
       method: 'post',
       headers: {
-        "Content-Type": "application/json",
+        "content-type": "application/json",
       },
-        body: JSON.stringify({"message": formJSON})
+      body: JSON.stringify({"message": formJSON})
     });
     const respJson = await resp.json();
     const responseDiv = document.getElementById("message-response-div");
