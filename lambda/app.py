@@ -108,4 +108,4 @@ def handler(event, context):
         decoded = base64.b64decode(event.get("body", ""))
         return handle_actions(decoded)
     else:
-        return handle_actions(event.get("body", {}))
+        return handle_actions(json.loads(event.get("body", {})))
