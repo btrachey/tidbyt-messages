@@ -31,7 +31,11 @@ def load_message_template():
 
 
 def send_specific_image(image_label):
-    fixed_images_dict = {"nyan_cat": "nyan_cat.webp"}
+    fixed_images_dict = {
+        "nyan_cat": "nyan_cat.webp",
+        "stop_sign": "stop_sign.webp",
+    }
+
     image_to_push = fixed_images_dict.get(image_label, "nyan_cat.webp")
 
     tidbyt_device_id = os.environ.get("TIDBYT_DEVICE_ID")
@@ -106,6 +110,9 @@ def handler(event, context):
 
     if event.get("isBase64Encoded", False):
         decoded = base64.b64decode(event.get("body", ""))
-        return handle_actions(decoded)
-    else:
+        return handle_actions(json.loads(decoded))
+
+    try:
         return handle_actions(json.loads(event.get("body", {})))
+    except TypeError:
+        return handle_actions(event.get("body", {}))

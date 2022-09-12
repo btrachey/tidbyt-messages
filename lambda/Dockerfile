@@ -22,6 +22,7 @@ RUN python3 -m pip install awslambdaric
 COPY app.py .
 COPY text.star .
 COPY nyan_cat.webp .
+COPY stop_sign.webp .
 
 ADD https://github.com/aws/aws-lambda-runtime-interface-emulator/releases/latest/download/aws-lambda-rie /usr/bin/aws-lambda-rie
 COPY entry.sh /
